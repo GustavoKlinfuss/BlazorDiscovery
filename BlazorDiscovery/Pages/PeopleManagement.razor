@@ -1,0 +1,75 @@
+﻿@page "/peoplemanagement"
+
+<PageTitle>Gerenciamento de cadastros</PageTitle>
+
+@using BlazorDiscovery.Data
+@inject PersonRegisterManagementService PersonRegisterManagementService
+@inject NavigationManager NavigationManager
+
+<h1>Gerenciamento de cadastros</h1>
+
+@if (registeredPersons == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>Documento (CPF)</th>
+                <th>Telefone</th>
+                <th>E-mail</th>
+                <th>Data de Nascimento</th>
+                <th>Data de Registro</th>
+                <th>Data da Última modificação</th>
+                <th>Endereço</th>
+                <th>Cidade e estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in registeredPersons)
+            {
+                <tr>
+                    <td>
+                        <button class="btn btn-outline-dark" @onclick=@(() => Edit(person))>
+                            <span>Editar</span>
+                        </button>
+                    </td>
+                    <td>@person.Id</td>
+                    <td>@person.Name</td>
+                    <td>@person.Document</td>
+                    <td>@person.Phone</td>
+                    <td>@person.Email</td>
+                    <td>@person.BirthDate</td>
+                    <td>@person.RegisterDate</td>
+                    <td>@person.LastModificationDate</td>
+                    <td>@person.Address?.Street, @person.Address?.Number - @person.Address?.ZipCode</td>
+                    <td>@person.Address?.City - @person.Address?.State</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private PersonView[]? registeredPersons;
+
+    protected override async Task OnInitializedAsync()
+    {
+        registeredPersons = ConvertToView(await PersonRegisterManagementService.GetPeopleAsync());
+    }
+
+    private PersonView[]? ConvertToView(PersonModel[] personModels)
+    {
+        return personModels.Select(x => new PersonView(x)).ToArray();
+    }
+
+    private void Edit(PersonView person)
+    {
+        NavigationManager.NavigateTo($"peoplemanagement/{person.Id}");
+    }
+}
