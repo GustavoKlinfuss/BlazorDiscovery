@@ -1,0 +1,133 @@
+﻿@page "/peoplemanagement/{id}"
+
+<PageTitle>Editar pessoa</PageTitle>
+
+@using BlazorBootstrap
+@using BlazorDiscovery.Data
+@inject PersonRegisterManagementService PersonRegisterManagementService
+
+<h1>Editar pessoa</h1>
+
+@if (Id is not null)
+{
+    @if (Person is not null)
+    {
+        <Toasts class="p-3" Messages="messages" AutoHide="true" StackLength="3" Placement="ToastsPlacement.TopRight" />
+        <EditForm Model=@Person OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
+            <DataAnnotationsValidator />
+            <div class="form-group">
+                <label>Id</label>
+                <InputText class="form-control" @bind-Value="Person!.Id" disabled="true"></InputText>
+            </div>
+            <div class="form-group">
+                <label>Data de criação: </label>
+                <InputDate class="form-control" Type="InputDateType.DateTimeLocal" @bind-Value="Person!.RegisterDate" disabled="true"></InputDate>
+            </div>
+            <div class="form-group">
+                <label>Data da última modificação: </label>
+                <InputDate class="form-control" Type="InputDateType.DateTimeLocal" @bind-Value="Person!.LastModificationDate" disabled="true"></InputDate>
+            </div>
+
+            <div class="form-group">
+                <label For="Name">Nome</label>
+                <InputText class="form-control" @bind-Value="Person!.Name" Id="Name"></InputText>
+                <ValidationMessage For="() => Person.Name" />
+            </div>
+
+            <div class="form-group">
+                <label>Telefone</label>
+                <InputText class="form-control" @bind-Value="Person!.Phone"></InputText>
+                <ValidationMessage For="() => Person.Phone" />
+            </div>
+
+            <div class="form-group">
+                <label>E-Mail</label>
+                <InputText class="form-control" @bind-Value="Person!.Email"></InputText>
+                <ValidationMessage For="() => Person.Email" />
+            </div>
+
+            <div class="form-group">
+                <label>Data de Nascimento</label>
+                <InputDate class="form-control" @bind-Value="Person!.BirthDate"></InputDate>
+                <ValidationMessage For="() => Person.BirthDate" />
+            </div>
+
+            <h6>Endereço</h6>
+            <div class="form-group">
+                <label>CEP</label>
+                <InputText class="form-control" @bind-Value="Person!.Address.ZipCode"></InputText>
+                <ValidationMessage For="() => Person.Address.ZipCode" />
+            </div>
+            <div class="form-group">
+                <label>Rua</label>
+                <InputText class="form-control" @bind-Value="Person!.Address.Street"></InputText>
+                <ValidationMessage For="() => Person.Address.Street" />
+            </div>
+            <div>
+                <label>Número</label>
+                <InputText class="form-control" @bind-Value="Person!.Address.Number"></InputText>
+                <ValidationMessage For="() => Person.Address.Number" />
+            </div>
+            <div class="form-group">
+                <label>Cidade</label>
+                <InputText class="form-control" @bind-Value="Person!.Address.City"></InputText>
+                <ValidationMessage For="() => Person.Address.City" />
+            </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <InputText class="form-control" @bind-Value="Person!.Address.State"></InputText>
+                <ValidationMessage For="() => Person.Address.State" />
+            </div>
+            <input type="submit" class="btn btn-primary" value="Save" />
+        </EditForm>
+    }
+}
+
+@code {
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    [Parameter]
+    public string? Id { get; set; }
+
+    private PersonCompleteView? Person { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id is not null && Guid.TryParse(this.Id, out Guid idx)) {
+            Person = new PersonCompleteView(await PersonRegisterManagementService.GetPeopleAsync(idx));
+        }
+    }
+
+    async void ValidFormSubmitted(EditContext editContext)
+    {
+        var model = new UpdatePersonModel(
+            Person!.Name, 
+            Person!.BirthDate, 
+            Person!.Document, 
+            new PersonModel.PersonModelAddress(
+                Person!.Address.Street,
+                Person!.Address.Number,
+                Person!.Address.City,
+                Person!.Address.State,
+                Person!.Address.ZipCode),
+            Person!.Phone,
+            Person!.Email);
+        var result = await PersonRegisterManagementService.UpdateAsync(Guid.Parse(Id!), model);
+        messages.Add(new ToastMessage
+        {
+            Type = ToastType.Success,
+            Title = "Usuário editado com sucesso",
+            HelpText = $"Sucesso!",
+            Message = $"Sucessagem!",
+        });
+    }
+
+    void InvalidFormSubmitted(EditContext editContext)
+    {
+    }
+
+    void ShowSuccessModal()
+    {
+        
+    }
+}

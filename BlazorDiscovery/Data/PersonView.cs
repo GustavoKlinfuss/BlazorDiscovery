@@ -11,8 +11,8 @@
             Address = new PersonViewAddress(person.Address);
             Phone = person.Phone;
             Email = person.Email;
-            RegisterDate = person.DataCadastro;
-            LastModificationDate = person.DataUltimaModificacao;
+            RegisterDate = person.RegisterDate;
+            LastModificationDate = person.LastModificationDate;
         }
 
         private static string Mascarar(string document)
@@ -23,12 +23,12 @@
         }
 
         public Guid Id { get; init; }
-        public string Name { get; init; }
-        public DateOnly BirthDate { get; init; }
-        public string Document { get; init; }
+        public string Name { get; private set; }
+        public DateOnly BirthDate { get; private set; }
+        public string Document { get; private set; }
         public PersonViewAddress Address { get; init; }
-        public string Phone { get; init; }
-        public string Email { get; init; }
+        public string Phone { get; private set; }
+        public string Email { get; private set; }
         public DateTime RegisterDate { get; init; }
         public DateTime? LastModificationDate { get; init; }
 
