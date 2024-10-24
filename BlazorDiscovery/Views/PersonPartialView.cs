@@ -1,14 +1,16 @@
-﻿namespace BlazorDiscovery.Data
+﻿using BlazorDiscovery.Areas.PersonManagement.Contracts;
+
+namespace BlazorDiscovery.Views
 {
-    public class PersonView
+    public class PersonPartialView
     {
-        public PersonView(PersonModel person)
+        public PersonPartialView(PersonModel person)
         {
             Id = person.Id;
             Name = person.Name;
             BirthDate = person.BirthDate;
             Document = Mascarar(person.Document);
-            Address = new PersonViewAddress(person.Address);
+            Address = new PersonPartialViewAddress(person.Address);
             Phone = person.Phone;
             Email = person.Email;
             RegisterDate = person.RegisterDate;
@@ -26,15 +28,15 @@
         public string Name { get; private set; }
         public DateOnly BirthDate { get; private set; }
         public string Document { get; private set; }
-        public PersonViewAddress Address { get; init; }
+        public PersonPartialViewAddress Address { get; init; }
         public string Phone { get; private set; }
         public string Email { get; private set; }
         public DateTime RegisterDate { get; init; }
         public DateTime? LastModificationDate { get; init; }
 
-        public class PersonViewAddress
+        public class PersonPartialViewAddress
         {
-            public PersonViewAddress(PersonModel.PersonModelAddress address)
+            public PersonPartialViewAddress(PersonModel.PersonModelAddress address)
             {
                 Street = address.Street;
                 Number = address.Number;

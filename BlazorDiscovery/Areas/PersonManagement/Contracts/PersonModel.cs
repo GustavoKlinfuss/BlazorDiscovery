@@ -1,6 +1,6 @@
-﻿using static BlazorDiscovery.Data.PersonModel;
+﻿using static BlazorDiscovery.Areas.PersonManagement.Contracts.PersonModel;
 
-namespace BlazorDiscovery.Data
+namespace BlazorDiscovery.Areas.PersonManagement.Contracts
 {
     public class PersonModel
     {
@@ -31,6 +31,26 @@ namespace BlazorDiscovery.Data
             public string State { get; init; }
             public string ZipCode { get; init; }
         }
+    }
+
+    public class CreatePersonModel
+    {
+        public CreatePersonModel(string name, DateOnly birthDate, string document, PersonModelAddress address, string phone, string email)
+        {
+            Name = name;
+            BirthDate = birthDate;
+            Document = document;
+            Address = address;
+            Phone = phone;
+            Email = email;
+        }
+
+        public string Name { get; init; }
+        public DateOnly BirthDate { get; init; }
+        public string Document { get; init; }
+        public PersonModelAddress Address { get; init; }
+        public string Phone { get; init; }
+        public string Email { get; init; }
     }
 
     public class UpdatePersonModel

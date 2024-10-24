@@ -1,18 +1,25 @@
-﻿@page "/peoplemanagement/{id}"
-
-<PageTitle>Editar pessoa</PageTitle>
+﻿@page "/personmanagement/{id}"
+@attribute [Authorize]
 
 @using BlazorBootstrap
-@using BlazorDiscovery.Data
-@inject PersonRegisterManagementService PersonRegisterManagementService
+@using BlazorDiscovery.Areas.PersonManagement.Contracts
+@using BlazorDiscovery.Areas.PersonManagement.Services
+@using BlazorDiscovery.Views
+@inject PersonManagementService PersonManagementService
+@inject NavigationManager NavigationManager
 
-<h1>Editar pessoa</h1>
+<PageTitle>Editar cadastro</PageTitle>
+
+<h1>Editar cadastro</h1>
 
 @if (Id is not null)
 {
     @if (Person is not null)
     {
         <Toasts class="p-3" Messages="messages" AutoHide="true" StackLength="3" Placement="ToastsPlacement.TopRight" />
+        <actions>
+            <button class="btn btn-danger" @onclick="Deletar">Deletar</button>
+        </actions>
         <EditForm Model=@Person OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
             <DataAnnotationsValidator />
             <div class="form-group">
@@ -89,16 +96,16 @@
     [Parameter]
     public string? Id { get; set; }
 
-    private PersonCompleteView? Person { get; set; }
+    private PersonView? Person { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         if (Id is not null && Guid.TryParse(this.Id, out Guid idx)) {
-            Person = new PersonCompleteView(await PersonRegisterManagementService.GetPeopleAsync(idx));
+            Person = new PersonView(await PersonManagementService.GetPeopleAsync(idx));
         }
     }
 
-    async void ValidFormSubmitted(EditContext editContext)
+    async Task ValidFormSubmitted(EditContext editContext)
     {
         var model = new UpdatePersonModel(
             Person!.Name, 
@@ -112,7 +119,7 @@
                 Person!.Address.ZipCode),
             Person!.Phone,
             Person!.Email);
-        var result = await PersonRegisterManagementService.UpdateAsync(Guid.Parse(Id!), model);
+        var result = await PersonManagementService.UpdateAsync(Guid.Parse(Id!), model);
         messages.Add(new ToastMessage
         {
             Type = ToastType.Success,
@@ -122,12 +129,19 @@
         });
     }
 
-    void InvalidFormSubmitted(EditContext editContext)
-    {
-    }
+    void InvalidFormSubmitted(EditContext editContext) { }
 
-    void ShowSuccessModal()
+    async Task Deletar()
     {
-        
+        await PersonManagementService.DeleteAsync(Guid.Parse(Id!));
+        messages.Add(new ToastMessage
+            {
+                Type = ToastType.Success,
+                Title = "Usuário deletado com sucesso",
+                HelpText = $"Sucesso!",
+                Message = $"Sucessagem!",
+            });
+        await Task.Delay(3000);
+        NavigationManager.NavigateTo($"personmanagement");
     }
 }

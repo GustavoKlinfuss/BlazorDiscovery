@@ -1,12 +1,15 @@
 ﻿@page "/personmanagement"
+@attribute [Authorize]
 
-<PageTitle>Gerenciamento de cadastros</PageTitle>
-
-@using BlazorDiscovery.Data
-@inject PersonRegisterManagementService PersonRegisterManagementService
+@using BlazorDiscovery.Areas.PersonManagement.Contracts
+@using BlazorDiscovery.Views
+@using BlazorDiscovery.Areas.PersonManagement.Services
+@inject PersonManagementService PersonManagementService
 @inject NavigationManager NavigationManager
 
-<h1>Gerenciamento de cadastros</h1>
+<PageTitle>Cadastros</PageTitle>
+
+<h1>Cadastros</h1>
 
 @if (registeredPersons == null)
 {
@@ -14,6 +17,9 @@
 }
 else
 {
+    <actions>
+        <NavLink class="btn btn-primary" href="personmanagement/new">Novo</NavLink>
+    </actions>
     <table class="table">
         <thead>
             <tr>
@@ -60,7 +66,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        registeredPersons = ConvertToView(await PersonRegisterManagementService.GetPeopleAsync());
+        registeredPersons = ConvertToView(await PersonManagementService.GetPeopleAsync());
     }
 
     private PersonView[]? ConvertToView(PersonModel[] personModels)
@@ -70,6 +76,6 @@ else
 
     private void Edit(PersonView person)
     {
-        NavigationManager.NavigateTo($"peoplemanagement/{person.Id}");
+        NavigationManager.NavigateTo($"personmanagement/{person.Id}");
     }
 }

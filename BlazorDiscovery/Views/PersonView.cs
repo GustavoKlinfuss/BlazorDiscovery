@@ -1,16 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BlazorDiscovery.Areas.PersonManagement.Contracts;
 
-namespace BlazorDiscovery.Data
+namespace BlazorDiscovery.Views
 {
-    public class PersonCompleteView
+    public class PersonView
     {
-        public PersonCompleteView(PersonModel person)
+        public PersonView() { }
+        public PersonView(PersonModel person)
         {
             Id = person.Id.ToString();
             Name = person.Name;
             BirthDate = person.BirthDate;
             Document = Mask(person.Document);
-            Address = new PersonCompleteViewAddress(person.Address);
+            Address = new PersonViewAddress(person.Address);
             Phone = person.Phone;
             Email = person.Email;
             RegisterDate = person.RegisterDate;
@@ -31,15 +33,17 @@ namespace BlazorDiscovery.Data
         public string Name { get; set; }
         public DateOnly BirthDate { get; set; }
         public string Document { get; set; }
-        public PersonCompleteViewAddress Address { get; init; }
+        public PersonViewAddress Address { get; init; } = new PersonViewAddress();
         public string Phone { get; set; }
         public string Email { get; set; }
         public DateTime RegisterDate { get; set; }
         public DateTime LastModificationDate { get; set; } = DateTime.MinValue;
 
-        public class PersonCompleteViewAddress
+        public class PersonViewAddress
         {
-            public PersonCompleteViewAddress(PersonModel.PersonModelAddress address)
+            public PersonViewAddress() { }
+
+            public PersonViewAddress(PersonModel.PersonModelAddress address)
             {
                 Street = address.Street;
                 Number = address.Number;
