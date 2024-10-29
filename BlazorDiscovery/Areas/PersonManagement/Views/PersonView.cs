@@ -15,7 +15,7 @@ namespace BlazorDiscovery.Views
             Address = new PersonViewAddress(person.Address);
             Phone = person.Phone;
             Email = person.Email;
-            RegisterDate = person.RegisterDate;
+            CreationDate = person.CreationDate;
             LastModificationDate = person.LastModificationDate ?? DateTime.MinValue;
         }
 
@@ -31,12 +31,12 @@ namespace BlazorDiscovery.Views
         [MinLength(3, ErrorMessage = "Nome deve ter mais que 3 caracteres.")]
         [MaxLength(60, ErrorMessage = "Nome deve ter menos que 80 caracteres.")]
         public string Name { get; set; }
-        public DateOnly BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
         public string Document { get; set; }
         public PersonViewAddress Address { get; init; } = new PersonViewAddress();
         public string Phone { get; set; }
         public string Email { get; set; }
-        public DateTime RegisterDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public DateTime LastModificationDate { get; set; } = DateTime.MinValue;
 
         public class PersonViewAddress
@@ -53,7 +53,7 @@ namespace BlazorDiscovery.Views
             }
 
             public string Street { get; set; }
-            public string Number { get; set; }
+            public int Number { get; set; }
             public string City { get; set; }
             public string State { get; set; }
             public string ZipCode { get; set; }

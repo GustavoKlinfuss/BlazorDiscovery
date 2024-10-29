@@ -1,11 +1,11 @@
 ﻿@page "/personmanagement/new"
 @attribute [Authorize]
 
-@using BlazorBootstrap
 @using BlazorDiscovery.Areas.PersonManagement.Contracts
 @using BlazorDiscovery.Areas.PersonManagement.Services
 @using BlazorDiscovery.Views
 @inject PersonManagementService PersonManagementService
+@inject NavigationManager NavigationManager
 
 <PageTitle>Criar pessoa</PageTitle>
 
@@ -13,13 +13,19 @@
 
 @if (Person is not null)
 {
-    <Toasts class="p-3" Messages="messages" AutoHide="true" StackLength="3" Placement="ToastsPlacement.TopRight" />
+    <Toasts class="p-3" Messages="_messages" AutoHide="true" StackLength="3" Placement="ToastsPlacement.TopRight" />
     <EditForm Model=@Person OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
         <DataAnnotationsValidator />
         <div class="form-group">
             <label For="Name">Nome</label>
             <InputText class="form-control" @bind-Value="Person!.Name" Id="Name"></InputText>
             <ValidationMessage For="() => Person.Name" />
+        </div>
+
+        <div class="form-group">
+            <label>Documento</label>
+            <InputText class="form-control" @bind-Value="Person!.Document"></InputText>
+            <ValidationMessage For="() => Person.Document" />
         </div>
 
         <div class="form-group">
@@ -53,7 +59,7 @@
         </div>
         <div>
             <label>Número</label>
-            <InputText class="form-control" @bind-Value="Person!.Address.Number"></InputText>
+            <InputNumber class="form-control" @bind-Value="Person!.Address.Number"></InputNumber>
             <ValidationMessage For="() => Person.Address.Number" />
         </div>
         <div class="form-group">
@@ -71,9 +77,9 @@
 }
 
 @code {
-    List<ToastMessage> messages = new List<ToastMessage>();
+    readonly List<ToastMessage> _messages = new();
 
-    private PersonView? Person { get; set; } = new PersonView();
+    private PersonView? Person { get; set; } = new();
 
     async void ValidFormSubmitted(EditContext editContext)
     {
@@ -89,14 +95,42 @@
                 Person!.Address.ZipCode),
             Person!.Phone,
             Person!.Email);
-        var result = await PersonManagementService.CreateAsync(model);
-        messages.Add(new ToastMessage
+        var apiResponse = await PersonManagementService.CreateAsync(model);
+        if (apiResponse?.Sucesso == true)
         {
-            Type = ToastType.Success,
-            Title = "Usuário editado com sucesso",
-            HelpText = $"Sucesso!",
-            Message = $"Sucessagem!",
-        });
+            _messages.Add(new ToastMessage
+            {
+                Type = ToastType.Success,
+                Title = "Usuário criado com sucesso",
+                HelpText = $"Sucesso!",
+                Message = $"Sucessagem!",
+            });
+            NavigationManager.NavigateTo("personmanagement");
+        }
+        else if (apiResponse?.Erros is not null)
+        {
+            foreach (var error in apiResponse.Erros)
+            {
+                _messages.Add(new ToastMessage
+                {
+                    Type = ToastType.Danger,
+                    Title = "Erro ao criar usuário",
+                    HelpText = $"{error.Codigo} -> {error.Mensagem}",
+                    Message = $"{error.Codigo} -> {error.Mensagem}",
+                });
+            }
+        }
+        else
+        {
+            _messages.Add(new ToastMessage
+            {
+                Type = ToastType.Danger,
+                Title = "Erro ao criar usuário",
+                HelpText = $"GENÉRICO",
+                Message = $"GENÉRICO",
+            });
+        }
+        
     }
 
     void InvalidFormSubmitted(EditContext editContext) { }

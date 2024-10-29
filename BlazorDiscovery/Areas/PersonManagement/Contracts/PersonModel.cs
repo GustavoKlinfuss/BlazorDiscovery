@@ -6,17 +6,18 @@ namespace BlazorDiscovery.Areas.PersonManagement.Contracts
     {
         public Guid Id { get; init; }
         public string Name { get; init; }
-        public DateOnly BirthDate { get; init; }
+        public DateTime BirthDate { get; init; }
         public string Document { get; init; }
         public PersonModelAddress Address { get; init; }
         public string Phone { get; init; }
         public string Email { get; init; }
-        public DateTime RegisterDate { get; set; }
+        public DateTime CreationDate { get; init; }
         public DateTime? LastModificationDate { get; set; }
 
         public class PersonModelAddress
         {
-            public PersonModelAddress(string street, string number, string city, string state, string zipCode)
+            protected PersonModelAddress() {}
+            public PersonModelAddress(string street, int number, string city, string state, string zipCode)
             {
                 Street = street;
                 Number = number;
@@ -26,7 +27,7 @@ namespace BlazorDiscovery.Areas.PersonManagement.Contracts
             }
 
             public string Street { get; init; }
-            public string Number { get; init; }
+            public int Number { get; init; }
             public string City { get; init; }
             public string State { get; init; }
             public string ZipCode { get; init; }
@@ -35,7 +36,7 @@ namespace BlazorDiscovery.Areas.PersonManagement.Contracts
 
     public class CreatePersonModel
     {
-        public CreatePersonModel(string name, DateOnly birthDate, string document, PersonModelAddress address, string phone, string email)
+        public CreatePersonModel(string name, DateTime birthDate, string document, PersonModelAddress address, string phone, string email)
         {
             Name = name;
             BirthDate = birthDate;
@@ -46,7 +47,7 @@ namespace BlazorDiscovery.Areas.PersonManagement.Contracts
         }
 
         public string Name { get; init; }
-        public DateOnly BirthDate { get; init; }
+        public DateTime BirthDate { get; init; }
         public string Document { get; init; }
         public PersonModelAddress Address { get; init; }
         public string Phone { get; init; }
@@ -55,7 +56,7 @@ namespace BlazorDiscovery.Areas.PersonManagement.Contracts
 
     public class UpdatePersonModel
     {
-        public UpdatePersonModel(string name, DateOnly birthDate, string document, PersonModelAddress address, string phone, string email)
+        public UpdatePersonModel(string name, DateTime birthDate, string document, PersonModelAddress address, string phone, string email)
         {
             Name = name;
             BirthDate = birthDate;
@@ -66,7 +67,7 @@ namespace BlazorDiscovery.Areas.PersonManagement.Contracts
         }
 
         public string Name { get; init; }
-        public DateOnly BirthDate { get; init; }
+        public DateTime BirthDate { get; init; }
         public string Document { get; init; }
         public PersonModelAddress Address { get; init; }
         public string Phone { get; init; }

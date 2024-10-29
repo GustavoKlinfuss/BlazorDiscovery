@@ -2,5 +2,5 @@
 
 namespace BlazorDiscovery.Areas.PersonManagement.Contracts
 {
-    public class GetPersonByIdResponse : BaseApiResponse<GetPersonByIdResponse> { }
+    public class GetPersonByIdResponse : BaseApiResponse<PersonModel> { }
 }

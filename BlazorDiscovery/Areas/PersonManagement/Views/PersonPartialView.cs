@@ -13,7 +13,7 @@ namespace BlazorDiscovery.Views
             Address = new PersonPartialViewAddress(person.Address);
             Phone = person.Phone;
             Email = person.Email;
-            RegisterDate = person.RegisterDate;
+            CreationDate = person.CreationDate;
             LastModificationDate = person.LastModificationDate;
         }
 
@@ -26,12 +26,12 @@ namespace BlazorDiscovery.Views
 
         public Guid Id { get; init; }
         public string Name { get; private set; }
-        public DateOnly BirthDate { get; private set; }
+        public DateTime BirthDate { get; private set; }
         public string Document { get; private set; }
         public PersonPartialViewAddress Address { get; init; }
         public string Phone { get; private set; }
         public string Email { get; private set; }
-        public DateTime RegisterDate { get; init; }
+        public DateTime CreationDate { get; init; }
         public DateTime? LastModificationDate { get; init; }
 
         public class PersonPartialViewAddress
@@ -46,7 +46,7 @@ namespace BlazorDiscovery.Views
             }
 
             public string Street { get; init; }
-            public string Number { get; init; }
+            public int Number { get; init; }
             public string City { get; init; }
             public string State { get; init; }
             public string ZipCode { get; init; }
